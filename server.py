@@ -5,7 +5,7 @@ mcp = MCPServer("code-explorer")
 root = Path("/Users/antoannguyen/devflow-ai")
 
 @mcp.tool()
-def list_files():
+def list_files() -> list[str]:  
     """Lists files relative to the project folder, excluding the .git folder"""
     files = []
     for p in root.rglob("*"):
@@ -14,4 +14,12 @@ def list_files():
                 continue
             files.append(str(p.relative_to(root)))
     return files
-        
+
+@mcp.tool()
+def read_file(path: str) -> str:
+    """Read a file and return its content"""
+    full_path = root / path 
+
+    if not full_path.is_file():
+        raise FileNotFoundError(f"This file path does not exist: {path}")
+    return full_path.read_text()
