@@ -28,3 +28,6 @@ def read_file(path: str) -> str:
             raise ToolError(f"This file path does not exist: {path}")
 
     return full_path.read_text()
+
+if __name__ == "__main__":
+     mcp.run()
