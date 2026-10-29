@@ -1,5 +1,6 @@
 from mcp.server import MCPServer
 from pathlib import Path
+from mcp.server.mcpserver.exceptions import ToolError
 
 mcp = MCPServer("code-explorer")
 root = Path("/Users/antoannguyen/devflow-ai")
@@ -21,5 +22,5 @@ def read_file(path: str) -> str:
     full_path = root / path 
 
     if not full_path.is_file():
-        raise FileNotFoundError(f"This file path does not exist: {path}")
+        raise ToolError(f"This file path does not exist: {path}")
     return full_path.read_text()
