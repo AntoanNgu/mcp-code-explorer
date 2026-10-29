@@ -3,7 +3,7 @@ from pathlib import Path
 from mcp.server.mcpserver.exceptions import ToolError
 
 mcp = MCPServer("code-explorer")
-root = Path("/Users/antoannguyen/devflow-ai")
+root = Path("/Users/antoannguyen/devflow-ai").resolve()
 
 @mcp.tool()
 def list_files() -> list[str]:  
@@ -19,8 +19,12 @@ def list_files() -> list[str]:
 @mcp.tool()
 def read_file(path: str) -> str:
     """Read a file and return its content"""
-    full_path = root / path 
+    full_path = (root / path).resolve()
 
-    if not full_path.is_file():
-        raise ToolError(f"This file path does not exist: {path}")
+    if not full_path.resolve().is_relative_to(root):
+        raise ToolError(f"Access denied: {path} is outside the project")
+
+    if not full_path.resolve().is_file():
+            raise ToolError(f"This file path does not exist: {path}")
+
     return full_path.read_text()
