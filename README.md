@@ -66,15 +66,15 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
 
 Claude lists project files using `list_files`:
 
-![Claude lists project files](screenshots/list-files.png)
+![Claude lists project files](Screenshots/list-files.PNG)
 
-Claude reads a files using `read_files` :
+Claude reads a files using `read_file` :
 
-![Claude reads evals.md](screenshots/read-file.png)
+![Claude reads evals.md](Screenshots/read-file.PNG)
 
 The server blocks a path outside the project:
 
-![Access denied](screenshots/access-denied.png)
+![Access denied](Screenshots/access-denied.PNG)
 
 ## Limitations
 
