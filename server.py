@@ -58,8 +58,12 @@ def read_file(path: str) -> str:
 
     if not full_path.resolve().is_file():
             raise ToolError(f"This file path does not exist: {path}")
-   
-    return full_path.read_text()
+
+    try:
+        return full_path.read_text()
+    except UnicodeDecodeError:
+        raise ToolError("Can not show binary files")
+
 
 if __name__ == "__main__":
      get_root()
