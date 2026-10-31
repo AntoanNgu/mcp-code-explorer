@@ -16,12 +16,13 @@ blocked_directories = {".git", ".venv", "node_modules"}
 
 
 def is_blocked(rel_path):
-    if rel_path.name in blocked_names:
+    name = rel_path.name.lower()
+    if name in blocked_names or name.startswith(".env"):
         return True
-    if rel_path.suffix in blocked_suffixes:
+    if rel_path.suffix.lower() in blocked_suffixes:
         return True
     for part in rel_path.parts:
-        if part in blocked_directories:
+        if part.lower() in blocked_directories:
             return True
     return False
 

@@ -30,6 +30,7 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
   * Protection works even inside the sandbox. The path check stops escapes, and this stops reads of sensitive files that are legitimately inside the folder.
   * Both tools enforce it: `list_files` hides these files and `read_file` refuses them, even when they're asked by name
   * Checks in `read_file` are in a specific order to have a protected check before existence check, so a client can't tell if a `.env` exists
+  * Makes matching case-sensitive and covers `.env` variants such as `.env.local`
 * Audit logging: Every tool call is logged to stderr (never stdout, the protocol channel), with timestamp, tool, path or file count, and outcome.
 
 ## Setup
@@ -84,6 +85,7 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
 
 * From the repo folder with the venv active, run `pytest`
 * Tests cover five `read_file`: valid read, `../` traversal blocked, `.env` blocked, missing files, binary file.
+* Tests cover `list_files` : uppercase suffix blocked, uppercase directory blocked,`.env` variant blocked
 
 ## Demo
 
@@ -102,7 +104,7 @@ The server blocks a path outside the project:
 ## Limitations
 
 * Only text files can be read, and binary files like images are refused with a clear error
-* The pytest only cover `read_file`, not `list_files`
+* `.env.example` is blocked too (the fail-closed trade-off)
 * Very large files get read with no limitation
 * No subfolder option, so Claude can't narrow its view to one part of a large project
 * No search tool
