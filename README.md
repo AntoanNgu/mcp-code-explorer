@@ -27,10 +27,10 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
 * When testing, Claude itself refused the SSH path, but the server enforces the boundary regardless of what the client decides.
 * Symlinks pointing outside the project are blocked, because paths are resolved before the check.
 * Least privilege: Hides secrets (like `.env` and key files) and dependency or version-control folders (`.git`, `.venv`, `node_modules`)
-
   * Protection works even inside the sandbox. The path check stops escapes, and this stops reads of sensitive files that are legitimately inside the folder.
   * Both tools enforce it: `list_files` hides these files and `read_file` refuses them, even when they're asked by name
   * Checks in `read_file` are in a specific order to have a protected check before existence check, so a client can't tell if a `.env` exists
+* Audit logging: Every tool call is logged to stderr (never stdout, the protocol channel), with timestamp, tool, path or file count, and outcome.
 
 ## Setup
 

@@ -3,10 +3,12 @@ from pathlib import Path
 from mcp.server.mcpserver.exceptions import ToolError
 
 import os
-import logging 
+import logging
 
 mcp = MCPServer("code-explorer")
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logging.basicConfig(
+    level=logging.INFO, force=True, format="%(asctime)s %(levelname)s %(message)s"
+)
 
 blocked_names = {".env", ".envrc", "id_rsa", "credentials.json"}
 blocked_suffixes = {".pem", ".key"}
@@ -70,12 +72,10 @@ def read_file(path: str) -> str:
         logging.warning("read_file denied (file does not exist): %s", path)
         raise ToolError(f"This file path does not exist: {path}")
 
-    
-    
     try:
         read = full_path.read_text()
         logging.info("read_file allowed: %s", path)
-        return read 
+        return read
     except UnicodeDecodeError:
         logging.warning("read_file denied (does not read binary files): %s", path)
         raise ToolError("Can not show binary files")
