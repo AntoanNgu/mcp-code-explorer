@@ -3,9 +3,10 @@ from pathlib import Path
 from mcp.server.mcpserver.exceptions import ToolError
 
 import os
+import logging 
 
 mcp = MCPServer("code-explorer")
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 blocked_names = {".env", ".envrc", "id_rsa", "credentials.json"}
 blocked_suffixes = {".pem", ".key"}
@@ -47,6 +48,7 @@ def list_files() -> list[str]:
         for p in root.rglob("*")
         if p.is_file() and not is_blocked(p.relative_to(root))
     ]
+    logging.info("list_files contains: %s files", len(files))
     return files
 
 
@@ -57,17 +59,25 @@ def read_file(path: str) -> str:
     full_path = (root / path).resolve()
 
     if not full_path.is_relative_to(root):
+        logging.warning("read_file denied (outside project): %s", path)
         raise ToolError(f"Access denied: {path} is outside the project")
 
     if is_blocked(full_path.relative_to(root)):
+        logging.warning("read_file denied (protected file): %s", path)
         raise ToolError(f"Access denied: {path} is a protected file")
 
     if not full_path.is_file():
+        logging.warning("read_file denied (file does not exist): %s", path)
         raise ToolError(f"This file path does not exist: {path}")
 
+    
+    
     try:
-        return full_path.read_text()
+        read = full_path.read_text()
+        logging.info("read_file allowed: %s", path)
+        return read 
     except UnicodeDecodeError:
+        logging.warning("read_file denied (does not read binary files): %s", path)
         raise ToolError("Can not show binary files")
 
 
