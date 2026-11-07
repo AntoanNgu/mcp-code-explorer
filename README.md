@@ -1,8 +1,11 @@
 # mcp-code-explorer
 
+[![tests](https://github.com/AntoanNgu/mcp-code-explorer/actions/workflows/tests.yml/badge.svg)](https://github.com/AntoanNgu/mcp-code-explorer/actions/workflows/tests.yml)
+
 MCP server in Python that lets AI clients list and read files within a sandboxed folder
 
-## What it is 
+
+## What it is
 
 * Model Context Protocol is a way to give a model context it doesn't have. It is also the standard for how an AI client and server talk. The servers, such as GitHub or Notion offer tools to the client side to find and call, which allows for any MCP client to use any MCP server eliminating the need for custom integration.
 * This is an MCP server written in python that allows AI clients to list and read files within a sandboxed folder
@@ -31,6 +34,7 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
   * Both tools enforce it: `list_files` hides these files and `read_file` refuses them, even when they're asked by name
   * Checks in `read_file` are in a specific order to have a protected check before existence check, so a client can't tell if a `.env` exists
   * Makes matching case-sensitive and covers `.env` variants such as `.env.local`
+  * 
 * Audit logging: Every tool call is logged to stderr (never stdout, the protocol channel), with timestamp, tool, path or file count, and outcome.
 
 ## Setup
@@ -79,13 +83,12 @@ MCP server in Python that lets AI clients list and read files within a sandboxed
       }
       ```
 
-
-
 ## Running tests
 
 * From the repo folder with the venv active, run `pytest`
 * Tests cover five `read_file`: valid read, `../` traversal blocked, `.env` blocked, missing files, binary file.
 * Tests cover `list_files` : uppercase suffix blocked, uppercase directory blocked,`.env` variant blocked
+* GitHub Actions runs the pytest suite for every push and pull request on a fresh Ubuntu Linux machine in the cloud. The badge at the top of the README file shows the latest results on main `(.github/workflows/tests.yml)`
 
 ## Demo
 
